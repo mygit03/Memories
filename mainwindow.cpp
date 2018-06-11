@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QDate>
 
+#include "itemdelegate.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -26,10 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
     model->setTable("info");
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
-    model->setHeaderData(0,Qt::Horizontal,tr("NAME"));
-    model->setHeaderData(1,Qt::Horizontal,tr("DATETIME"));
-    model->setHeaderData(2,Qt::Horizontal,tr("ADDR"));
-    model->setHeaderData(3,Qt::Horizontal,tr("NOTE"));
+    model->setHeaderData(0,Qt::Horizontal,tr("名字"));
+    model->setHeaderData(1,Qt::Horizontal,tr("日期"));
+    model->setHeaderData(2,Qt::Horizontal,tr("地址"));
+    model->setHeaderData(3,Qt::Horizontal,tr("注释"));
+
+    tableView->setItemDelegateForColumn(1,new DateDelegate);
 
     tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -123,7 +127,8 @@ void MainWindow::slot_add()
     int rows = model->rowCount();
     model->insertRow(rows);
 
-    QString dateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
+//    QString dateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
+    QString dateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd");
     QModelIndex index = model->index(rows,1);
     if(model->index(rows,1).data().isNull())
         model->setData(index,dateTime);
